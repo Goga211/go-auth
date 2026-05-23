@@ -16,7 +16,9 @@ func Register(gRPC *grpc.Server) {
 }
 
 func (s *serverAPI) Login(ctx context.Context, req *auth.LoginRequest) (*auth.LoginResponse, error) {
-	panic("implement me")
+	return &auth.LoginResponse{
+		Token: "tokenExample",
+	}, nil
 }
 
 func (s *serverAPI) Register(ctx context.Context, req *auth.RegisterRequest) (*auth.RegisterResponse, error) {
