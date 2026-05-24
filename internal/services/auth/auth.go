@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Goga211/go-auth/internal/domain/model"
+	"github.com/Goga211/go-auth/internal/lib/jwt"
 	"github.com/Goga211/go-auth/internal/storage"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -75,6 +76,13 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 	}
 
 	log.Info("user logged in")
+	token, err := jwt.NewToken(user, app, a.tokenTTL)
+	if err != nil {
+		a.log.Error("failed to generate token")
+		return "", fmt.Errorf("%s: %w", operation, err)
+	}
+	
+	return token, nil
 }
 
 func (a *Auth) RegisterNewUser(ctx context.Context, email string, password string) (int64, error) {

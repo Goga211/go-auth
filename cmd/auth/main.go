@@ -7,7 +7,7 @@ import (
 
 	"github.com/Goga211/go-auth/internal/app"
 	"github.com/Goga211/go-auth/internal/config"
-	"github.com/Goga211/go-auth/internal/logger"
+	"github.com/Goga211/go-auth/internal/lib/logger"
 )
 
 func main() {
