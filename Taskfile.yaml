@@ -1,6 +1,27 @@
 version: "3"
 
+vars:
+  BIN: ./bin/auth
+  CONFIG: ./config/local.yaml
+
 tasks:
+  build:
+    desc: "build the auth service binary"
+    cmds:
+      - go build -o {{.BIN}} ./cmd/auth
+
+  run:
+    desc: "build and run the auth service"
+    deps: [build]
+    cmds:
+      - "{{.BIN}} --config={{.CONFIG}}"
+
+  up:
+    desc: "migrate and run the auth service"
+    cmds:
+      - task: migrate
+      - task: run
+
   migrate:
     desc: "database migration"
     cmds:

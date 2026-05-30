@@ -37,13 +37,13 @@ type AppProvider interface {
 	App(ctx context.Context, appID int) (model.App, error)
 }
 
-func New(log *slog.Logger, userSaver UserSaver, appProvider AppProvider, userProvider UserProvider) *Auth {
+func New(log *slog.Logger, userSaver UserSaver, appProvider AppProvider, userProvider UserProvider, tokenTTL time.Duration) *Auth {
 	return &Auth{
 		log:         log,
 		usrSaver:    userSaver,
 		usrProvider: userProvider,
 		appProvider: appProvider,
-		tokenTTL:    time.Hour,
+		tokenTTL:    tokenTTL,
 	}
 }
 
@@ -81,7 +81,7 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 		a.log.Error("failed to generate token")
 		return "", fmt.Errorf("%s: %w", operation, err)
 	}
-	
+
 	return token, nil
 }
 

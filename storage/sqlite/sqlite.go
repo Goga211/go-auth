@@ -73,3 +73,24 @@ func (s *Storage) User(ctx context.Context, email string) (model.User, error) {
 
 	return user, nil
 }
+
+func (s *Storage) App(ctx context.Context, appID int) (model.App, error) {
+	const operation = "sqlite.Get.App"
+
+	stmt, err := s.db.Prepare("SELECT id, name, secret FROM apps WHERE id = ?")
+	if err != nil {
+		return model.App{}, fmt.Errorf("%s: %w", operation, err)
+	}
+	row := stmt.QueryRowContext(ctx, appID)
+
+	var app model.App
+	err = row.Scan(&app.ID, &app.Name, &app.Secret)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.App{}, fmt.Errorf("%s: %w", operation, storage.ErrAppNotFound)
+		}
+		return model.App{}, fmt.Errorf("%s: %w", operation, err)
+	}
+
+	return app, nil
+}

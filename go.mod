@@ -3,7 +3,7 @@ module github.com/Goga211/go-auth
 go 1.26.2
 
 require (
-	github.com/Goga211/proto v0.0.0-20260519213834-4ff6f2b5ae64
+	github.com/Goga211/proto v0.0.0-20260530225204-dc8de1f72ab3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 )
 
@@ -14,10 +14,10 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.44 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
-	golang.org/x/net v0.54.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260526163538-3dc84a4a5aaa // indirect
 	google.golang.org/grpc v1.81.1 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
