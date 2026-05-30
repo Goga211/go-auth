@@ -72,6 +72,7 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 
 	app, err := a.appProvider.App(ctx, appID)
 	if err != nil {
+		a.log.Warn("app not found")
 		return "", fmt.Errorf("%s: %w", operation, err)
 	}
 
