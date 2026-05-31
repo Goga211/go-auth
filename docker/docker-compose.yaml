@@ -1,0 +1,13 @@
+services:
+  auth:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "40049:40049"
+    volumes:
+      - auth-db:/app/storage
+    restart: unless-stopped
+
+volumes:
+  auth-db:
