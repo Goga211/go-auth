@@ -27,6 +27,10 @@ func Load() *Config {
 		panic("config path is empty")
 	}
 
+	return LoadFromPath(path)
+}
+
+func LoadFromPath(path string) *Config {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		panic("config path does not exist" + path)
 	}

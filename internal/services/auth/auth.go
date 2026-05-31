@@ -9,7 +9,7 @@ import (
 
 	"github.com/Goga211/go-auth/internal/domain/model"
 	"github.com/Goga211/go-auth/internal/lib/jwt"
-	"github.com/Goga211/go-auth/internal/storage"
+	"github.com/Goga211/go-auth/storage"
 	"golang.org/x/crypto/bcrypt"
 )
 
