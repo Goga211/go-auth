@@ -58,28 +58,28 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 	user, err := a.usrProvider.User(ctx, email)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserNotFound) {
-			a.log.Warn("user not found")
+			log.Warn("user not found")
 			return "", fmt.Errorf("%s: %w", operation, ErrInvalidCredentials)
 		}
-		a.log.Warn("user not found")
+		log.Warn("user not found")
 		return "", fmt.Errorf("%s: %w", operation, err)
 	}
 
 	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(password)); err != nil {
-		a.log.Warn("invalid password")
+		log.Warn("invalid password")
 		return "", fmt.Errorf("%s: %w", operation, ErrInvalidCredentials)
 	}
 
 	app, err := a.appProvider.App(ctx, appID)
 	if err != nil {
-		a.log.Warn("app not found")
+		log.Warn("app not found")
 		return "", fmt.Errorf("%s: %w", operation, err)
 	}
 
 	log.Info("user logged in")
 	token, err := jwt.NewToken(user, app, a.tokenTTL)
 	if err != nil {
-		a.log.Error("failed to generate token")
+		log.Error("failed to generate token")
 		return "", fmt.Errorf("%s: %w", operation, err)
 	}
 
