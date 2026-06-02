@@ -16,8 +16,10 @@ tasks:
   run:
     desc: "build and run the auth service"
     deps: [build]
+    env:
+      CONFIG_PATH: "{{.CONFIG}}"
     cmds:
-      - "{{.BIN}} --config={{.CONFIG}}"
+      - "{{.BIN}}"
 
   up:
     desc: "migrate and run the auth service"

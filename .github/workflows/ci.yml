@@ -30,7 +30,7 @@ jobs:
           STORAGE_PATH=./storage/auth.db MIGRATIONS_PATH=./tests/migrations MIGRATIONS_TABLE=migrations_test go run ./cmd/migrator
 
       - name: Start server
-        run: go run ./cmd/auth --config=./config/local.yaml &
+        run: CONFIG_PATH=./config/local.yaml go run ./cmd/auth > server.log 2>&1 &
 
       - name: Wait for gRPC port
         run: |
@@ -38,7 +38,7 @@ jobs:
             (echo > /dev/tcp/127.0.0.1/40049) >/dev/null 2>&1 && exit 0
             sleep 1
           done
-          echo "сервер не поднялся на :40049"; exit 1
+          echo "сервер не поднялся на :40049"; cat server.log; exit 1
 
       - name: Integration tests
         run: go test ./tests/... -v

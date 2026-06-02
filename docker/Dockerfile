@@ -14,4 +14,4 @@ COPY --from=builder /out/ /app/
 COPY config ./config
 COPY migrations ./migrations
 EXPOSE 40049
-CMD ["/bin/sh", "-c", "/app/migrator --storage-path=./storage/auth.db --migrations-path=./migrations && exec /app/auth --config=./config/docker.yaml"]
+CMD ["/bin/sh", "-c", "mkdir -p ./storage && STORAGE_PATH=./storage/auth.db MIGRATIONS_PATH=./migrations /app/migrator && CONFIG_PATH=./config/docker.yaml exec /app/auth"]
