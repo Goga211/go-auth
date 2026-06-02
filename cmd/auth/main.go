@@ -13,11 +13,11 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	_ = godotenv.Load()
 	viper.AutomaticEnv()
 
 	cfg := config.Load()
-	log := logger.SetupLogger(cfg.Env)
+	log := logger.SetupLogger()
 
 	log.Info("Starting app...")
 
