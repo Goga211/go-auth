@@ -1,11 +1,11 @@
 package config
 
 import (
-	"flag"
 	"os"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -21,7 +21,7 @@ type GRPCConfig struct {
 }
 
 func Load() *Config {
-	path := fetchConfigPath()
+	path := viper.GetString("CONFIG_PATH")
 
 	if path == "" {
 		panic("config path is empty")
@@ -41,17 +41,4 @@ func LoadFromPath(path string) *Config {
 	}
 
 	return &cfg
-}
-
-func fetchConfigPath() string {
-	var res string
-
-	flag.StringVar(&res, "config", "", "path to config file")
-	flag.Parse()
-
-	if res == "" {
-		res = os.Getenv("CONFIG_PATH")
-	}
-
-	return res
 }

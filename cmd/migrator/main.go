@@ -2,21 +2,22 @@ package main
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 func main() {
-	var storagePath, migrationsPath, migrationsTable string
+	godotenv.Load()
+	viper.AutomaticEnv()
 
-	flag.StringVar(&storagePath, "storage-path", "", "Path to a directory containing the migration files")
-	flag.StringVar(&migrationsPath, "migrations-path", "", "Path to a directory containing the migration files")
-	flag.StringVar(&migrationsTable, "migrations-table", "", "Path to a table containing the migration files")
-	flag.Parse()
+	storagePath := viper.GetString("STORAGE_PATH")
+	migrationsPath := viper.GetString("MIGRATIONS_PATH")
+	migrationsTable := viper.GetString("MIGRATIONS_TABLE")
 
 	validatePaths(storagePath, migrationsPath)
 
