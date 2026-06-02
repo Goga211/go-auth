@@ -43,9 +43,9 @@ func main() {
 
 func validatePaths(storagePath string, migrationsPath string) {
 	if storagePath == "" {
-		panic("storage-path flag is required")
+		panic("STORAGE_PATH is required")
 	}
 	if migrationsPath == "" {
-		panic("migrations-path flag is required")
+		panic("MIGRATIONS_PATH is required")
 	}
 }
