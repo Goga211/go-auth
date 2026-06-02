@@ -54,3 +54,59 @@ func TestLogin_HappyPath(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 }
+
+func TestLogin_FailCases(t *testing.T) {
+	const (
+		email = "user@mail.com"
+		pass  = "secret"
+		appID = 1
+	)
+
+	hash, _ := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
+
+	tests := []struct {
+		name     string
+		password string
+		setup    func(up *mocks.MockUserProvider, ap *mocks.MockAppProvider)
+		wantErr  error
+	}{
+		{
+			name:     "user not found",
+			password: pass,
+			setup: func(up *mocks.MockUserProvider, ap *mocks.MockAppProvider) {
+				up.EXPECT().User(mock.Anything, email).Return(model.User{}, storage.ErrUserNotFound)
+			},
+			wantErr: ErrInvalidCredentials,
+		},
+		{
+			name:     "wrong password",
+			password: "wrong-pass",
+			setup: func(up *mocks.MockUserProvider, ap *mocks.MockAppProvider) {
+				up.EXPECT().User(mock.Anything, email).Return(model.User{ID: 1, Email: email, PassHash: hash}, nil)
+			},
+			wantErr: ErrInvalidCredentials,
+		},
+		{
+			name:     "app not found",
+			password: pass,
+			setup: func(up *mocks.MockUserProvider, ap *mocks.MockAppProvider) {
+				up.EXPECT().User(mock.Anything, email).Return(model.User{ID: 1, Email: email, PassHash: hash}, nil)
+				ap.EXPECT().App(mock.Anything, appID).Return(model.App{}, storage.ErrAppNotFound)
+			},
+			wantErr: storage.ErrAppNotFound,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			up := mocks.NewMockUserProvider(t)
+			ap := mocks.NewMockAppProvider(t)
+			tt.setup(up, ap)
+
+			a := New(slog.Default(), nil, ap, up, time.Hour)
+
+			_, err := a.Login(context.Background(), email, tt.password, appID)
+			require.ErrorIs(t, err, tt.wantErr)
+		})
+	}
+}
