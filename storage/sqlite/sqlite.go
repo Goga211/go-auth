@@ -34,6 +34,8 @@ func (s *Storage) SaveUser(ctx context.Context, email string, passHash []byte) (
 		return 0, fmt.Errorf("%s: %w", operation, err)
 	}
 
+	defer stmt.Close()
+
 	res, err := stmt.ExecContext(ctx, email, passHash)
 
 	if err != nil {
@@ -59,6 +61,8 @@ func (s *Storage) User(ctx context.Context, email string) (model.User, error) {
 		return model.User{}, fmt.Errorf("%s: %w", operation, err)
 	}
 
+	defer stmt.Close()
+
 	row := stmt.QueryRowContext(ctx, email)
 
 	var user model.User
@@ -81,6 +85,9 @@ func (s *Storage) App(ctx context.Context, appID int) (model.App, error) {
 	if err != nil {
 		return model.App{}, fmt.Errorf("%s: %w", operation, err)
 	}
+
+	defer stmt.Close()
+
 	row := stmt.QueryRowContext(ctx, appID)
 
 	var app model.App
