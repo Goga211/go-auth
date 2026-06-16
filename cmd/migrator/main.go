@@ -4,26 +4,18 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Goga211/go-auth/internal/config"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/joho/godotenv"
-	"github.com/spf13/viper"
 )
 
 func main() {
-	godotenv.Load()
-	viper.AutomaticEnv()
-
-	storagePath := viper.GetString("STORAGE_PATH")
-	migrationsPath := viper.GetString("MIGRATIONS_PATH")
-	migrationsTable := viper.GetString("MIGRATIONS_TABLE")
-
-	validatePaths(storagePath, migrationsPath)
+	cfg := config.MustLoadMigrator()
 
 	m, err := migrate.New(
-		"file://"+migrationsPath,
-		fmt.Sprintf("sqlite3://%s?x-migrations-table=%s", storagePath, migrationsTable),
+		"file://"+cfg.MigrationsPath,
+		fmt.Sprintf("sqlite3://%s?x-migrations-table=%s", cfg.StoragePath, cfg.MigrationsTable),
 	)
 	if err != nil {
 		panic(err)
@@ -39,13 +31,4 @@ func main() {
 	}
 
 	fmt.Println("Migrations applied successfully")
-}
-
-func validatePaths(storagePath string, migrationsPath string) {
-	if storagePath == "" {
-		panic("STORAGE_PATH is required")
-	}
-	if migrationsPath == "" {
-		panic("MIGRATIONS_PATH is required")
-	}
 }
