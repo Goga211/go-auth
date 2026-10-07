@@ -1,0 +1,8 @@
+.git
+.idea
+.vscode
+bin/
+storage/*.db
+storage/*.sqlite*
+*.log
+tests/*.db

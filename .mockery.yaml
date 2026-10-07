@@ -1,0 +1,11 @@
+with-expecter: true
+dir: "internal/services/auth/mocks"
+mockname: "Mock{{.InterfaceName}}"
+outpkg: "mocks"
+filename: "{{.InterfaceName}}.go"
+packages:
+  github.com/Goga211/go-auth/internal/services/auth:
+    interfaces:
+      UserSaver:
+      UserProvider:
+      AppProvider:

@@ -1,0 +1,46 @@
+version: "3"
+
+vars:
+  BIN: ./bin/auth
+  CONFIG: ./config/local.yaml
+
+dotenv:
+  - .env
+
+tasks:
+  build:
+    desc: "build the auth service binary"
+    cmds:
+      - go build -o {{.BIN}} ./cmd/auth
+
+  run:
+    desc: "build and run the auth service"
+    deps: [build]
+    env:
+      CONFIG_PATH: "{{.CONFIG}}"
+    cmds:
+      - "{{.BIN}}"
+
+  up:
+    desc: "migrate and run the auth service"
+    cmds:
+      - task: migrate
+      - task: run
+
+  migrate:
+    desc: "database migration"
+    env:
+      STORAGE_PATH: ./storage/auth.db
+      MIGRATIONS_PATH: ./migrations
+      MIGRATIONS_TABLE: migrations
+    cmds:
+      - go run ./cmd/migrator
+
+  test_migrate:
+    desc: "test database migration"
+    env:
+      STORAGE_PATH: ./storage/auth.db
+      MIGRATIONS_PATH: ./tests/migrations
+      MIGRATIONS_TABLE: migrations_test
+    cmds:
+      - go run ./cmd/migrator
